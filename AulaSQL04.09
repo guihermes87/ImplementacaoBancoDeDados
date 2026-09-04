@@ -1,0 +1,140 @@
+
+-- PRINT DO SALÁRIO OU CRIAR UMA FUNÇÃO PARA EXIBIR O SALÁRIO DO FUNCIONÁRIO
+
+go
+DECLARE @Pnome as varchar(100),
+        @salario as DECIMAL(10,2);
+        SET @Pnome = 'Ana'
+        
+        select @salario = F.Salario
+        from FUNCIONARIO as f
+        where f.Pnome = @Pnome
+        
+        Print 'O Funcionário(a) ' + @Pnome +' tem um salário de : R$' + CAST(@salario as varchar(10));
+        go
+
+-- CONVERT, MAIS USADO PARA AS DATAS codigos específicos
+
+DECLARE @Pnome as varchar(100),
+        @salario as DECIMAL(10,2),
+        @datanascimento date,
+        @salariomedio as decimal(10,2),
+        @ano_atual int,
+        @ano_nascimento int,
+        @idade int;
+       
+        SET @Pnome = 'Jennnifer'
+        set @ano_atual = year(getdate()) - year(@datanascimento);
+        SELECT @ano_nascimento = YEAR(Datanasc) from FUNCIONARIO as f where @Pnome = F.Pnome;
+
+        --SET @idade = @ano_atual - @ano_nascimento
+        SET @idade = DATEDIFF(YEAR,@datanascimento,GETDATE());
+
+        IF (@idade <= 55)
+        PRINT 'O funcionário(a) ' + @pnome + ' não está próximo de se aposentar' +
+                'Idade' + cast(@idade as varchar(4));
+        
+        ELSE IF (@idade > 55 and @idade <=60)
+        PRINT 
+        'O funcionário(a) ' + @pnome +' está próximo(a) da aposentadoria' +
+         'Idade' + cast(@idade as varchar(4));
+        ELSE
+        PRINT
+        'O funcionário(a) ' + @pnome +' já pode se aposentar' +
+        'Idade' + cast(@idade as varchar(4));
+        go
+
+
+        DECLARE @Pnome as varchar(100),
+        @salario as DECIMAL(10,2),
+        @datanascimento date,
+        @salariomedio as decimal(10,2);
+
+        SET @Pnome = 'Ana';
+       
+        select @datanascimento = avg(F.salario) from FUNCIONARIO as F
+        SElect @salario = Salario from funcionario as f where @Pnome = Pnome;
+
+        IF(@salario<@salariomedio)
+        PRINT 'O funcionário(a) ' + @pnome + ' recebe abaixo da média';
+        ELSE
+        PRINT 
+        'O funcionário ' + @pnome +' recebe acima da média';
+        
+        go
+
+       --IF ELSE CONDICIONAIS
+
+        declare 
+
+            @Pnome as varchar(100),
+            @datanascimento date,
+            @idade int;
+           
+
+        SET @Pnome = 'Maria'
+        
+        SELECT @datanascimento = Datanasc from FUNCIONARIO as f where @Pnome = f.Pnome
+        
+        
+        if(MONTH(getdate()) < MONTH(@datanascimento))
+
+        set @idade = DATEDIFF(year,@datanascimento,getdate()) -1 
+
+        else if (MONTH(GETDATE()) = MONTH(@datanascimento) AND DAY(@datanascimento) > DAY(GETDATE()))
+
+        set @idade = DATEDIFF(year,@datanascimento,getdate()) -1
+
+        else 
+
+        set @idade = DATEDIFF(year,@datanascimento,getdate());
+        
+        print @datanascimento
+        print @idade
+
+
+    -- IIF
+
+select f.Pnome, f.unome, f.Salario,
+IIF(f.salario < 20000, 'Baixo', 'Alto') as 'Categoria'
+from funcionario as f
+
+select f.Pnome, f.unome, f.Salario,
+CASE 
+WHEN f.salario <= 10000  AND F.SALARIO > 0 THEN 'Baixo'
+WHEN F.salario > 10000 and f.salario <=30000 then 'Médio'
+WHEN F.Salario > 20000 THEN 'Alto'
+ELSE 'Erro'
+END as 'Categoria'
+from funcionario as f
+
+--WHILE CONTANDO ATÉ 10 E VARIAÇÔES
+
+DECLARE @contador int = 0;
+WHILE @contador < 10
+BEGIN
+SET @contador = @contador +1
+IF @contador % 2 != 0
+CONTINUE
+PRINT 'Contador teste ' + cast(@contador as varchar(3));
+END
+
+GO
+
+--CURSORES
+
+DECLARE @nome VARCHAR(50);
+DECLARE cursorFuncionario CURSOR FOR
+select Pnome from FUNCIONARIO; 
+
+OPEN cursorFuncionario;
+
+FETCH NEXT FROM cursorFuncionario into @nome;
+
+while @@FETCH_STATUS = 0
+BEGIN
+PRINT @NOME
+FETCH NEXT FROM cursorFuncionario into @nome;
+END
+CLOSE cursorFuncionario;
+DEALLOCATE cursorFuncionario
